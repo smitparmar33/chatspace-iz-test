@@ -1,0 +1,25 @@
+version: '3'
+
+services:
+  redis:
+    image: redis
+    command: redis-server
+    ports:
+      - '6379:6379'
+  web:
+    build: ./spaceiz_chat
+    command: python manage.py runserver 0.0.0.0:8000
+    volumes:
+      - ./spaceiz_chat:/spaceiz_chat
+    ports:
+      - "8000:8000"
+
+  channels:
+    build: ./spaceiz_chat
+    command: daphne -b 0.0.0.0 -p 8001 spaceiz_chat.asgi:application
+    volumes:
+      - ./spaceiz_chat:/spaceiz_chat
+    ports:
+      - "8001:8001"
+    links:
+      - redis
