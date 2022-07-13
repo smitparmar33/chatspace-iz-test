@@ -8,11 +8,17 @@ services:
       - '6379:6379'
   web:
     build: ./spaceiz_chat
-    command: python manage.py runserver 0.0.0.0:8000
+    command: gunicorn --bind :8000 --workers 3 --threads 2 spaceiz_chat.wsgi:application
     volumes:
       - ./spaceiz_chat:/spaceiz_chat
     ports:
       - "8000:8000"
+
+  migration:
+    build: ./spaceiz_chat
+    command: python manage.py migrate --noinput
+    volumes:
+      - ./spaceiz_chat:/spaceiz_chat
 
   channels:
     build: ./spaceiz_chat
