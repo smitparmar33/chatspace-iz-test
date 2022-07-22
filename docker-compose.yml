@@ -29,3 +29,11 @@ services:
       - "8001:8001"
     links:
       - redis
+  nginx:
+    build: ./nginx
+    volumes:
+      - ./spaceiz_chat:/spaceiz_chat
+    ports:
+      - 1337:80
+    depends_on:
+      - web
